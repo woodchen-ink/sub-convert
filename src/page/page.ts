@@ -419,7 +419,7 @@ export function showPage(request: Request, env: Env): Response {
     return new Response(html, {
         headers: new Headers({
             'Content-Type': 'text/html; charset=UTF-8',
-            'Cache-Control': 'no-store, no-cache, must-revalidate',
+            'Cache-Control': 'no-store, no-cache, must-revalidate'
         })
     });
 }
