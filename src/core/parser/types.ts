@@ -45,6 +45,9 @@ export interface TrojanConfig extends BaseConfig {}
 
 export interface SsConfig extends BaseConfig {}
 
+export interface SsrConfig extends BaseConfig {}
+
 export interface Hysteria2Config extends BaseConfig {}
 
 export type ParserType = VlessParser | VmessParser | TrojanParser | SsParser | Hysteria2Parser;
+

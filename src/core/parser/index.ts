@@ -43,7 +43,7 @@ export class Parser extends Convert {
                     parser = new VmessParser(processVps);
                 } else if (processVps.startsWith('trojan://') && this.hasProtocol('trojan')) {
                     parser = new TrojanParser(processVps);
-                } else if (processVps.startsWith('ss://') && this.hasProtocol('shadowsocks', 'shadowsocksr')) {
+                } else if (processVps.startsWith('ss://') && this.hasProtocol('shadowsocks')) {
                     parser = new SsParser(processVps);
                 } else if (this.isHysteria2(processVps) && this.hasProtocol('hysteria', 'hysteria2', 'hy2')) {
                     parser = new Hysteria2Parser(processVps);
