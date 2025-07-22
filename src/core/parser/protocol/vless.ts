@@ -65,7 +65,21 @@ export class VlessParser extends Faker {
         this.#confuseLink = this.#confuseConfig.href!;
     }
 
+    #restoreWs(proxy: Record<string, string | number | any>): void {
+        if (proxy.network === 'ws') {
+            proxy['ws-opts'] = {
+                ...proxy['ws-opts'],
+                path: decodeURIComponent(this.originConfig.searchParams?.get('path') ?? '/'),
+                headers: {
+                    ...proxy['ws-opts'].headers,
+                    Host: this.originConfig.host
+                }
+            };
+        }
+    }
+
     public restoreClash(proxy: Record<string, any>, ps: string): Record<string, any> {
+        this.#restoreWs(proxy);
         proxy.name = ps;
         proxy.server = this.originConfig.hostname ?? '';
         proxy.port = Number(this.originConfig?.port ?? 0);
