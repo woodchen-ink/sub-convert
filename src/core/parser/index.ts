@@ -32,45 +32,49 @@ export class Parser extends Convert {
 
     public async parse(vps: string[] = this.vps): Promise<void> {
         for await (const v of vps) {
-            const processVps = this.updateVpsPs(v);
+            try {
+                const processVps = this.updateVpsPs(v);
 
-            if (processVps) {
-                let parser: ParserType | null = null;
+                if (processVps) {
+                    let parser: ParserType | null = null;
 
-                if (processVps.startsWith('vless://') && this.hasProtocol('vless')) {
-                    parser = new VlessParser(processVps);
-                } else if (processVps.startsWith('vmess://') && this.hasProtocol('vmess')) {
-                    parser = new VmessParser(processVps);
-                } else if (processVps.startsWith('trojan://') && this.hasProtocol('trojan')) {
-                    parser = new TrojanParser(processVps);
-                } else if (processVps.startsWith('ss://') && this.hasProtocol('shadowsocks')) {
-                    parser = new SsParser(processVps);
-                } else if (this.isHysteria2(processVps) && this.hasProtocol('hysteria', 'hysteria2', 'hy2')) {
-                    parser = new Hysteria2Parser(processVps);
-                }
+                    if (processVps.startsWith('vless://') && this.hasProtocol('vless')) {
+                        parser = new VlessParser(processVps);
+                    } else if (processVps.startsWith('vmess://') && this.hasProtocol('vmess')) {
+                        parser = new VmessParser(processVps);
+                    } else if (processVps.startsWith('trojan://') && this.hasProtocol('trojan')) {
+                        parser = new TrojanParser(processVps);
+                    } else if (processVps.startsWith('ss://') && this.hasProtocol('shadowsocks')) {
+                        parser = new SsParser(processVps);
+                    } else if (this.isHysteria2(processVps) && this.hasProtocol('hysteria', 'hysteria2', 'hy2')) {
+                        parser = new Hysteria2Parser(processVps);
+                    }
 
-                if (parser) {
-                    this.setStore(processVps, parser);
-                }
-            }
-
-            if (v.startsWith('https://') || v.startsWith('http://')) {
-                const subContent = await fetchWithRetry(v, { retries: 3 }).then(r => r.data.text());
-                const { subType, content } = this.getSubType(subContent);
-
-                if (subType === 'base64' && content) {
-                    this.updateExist(Array.from(this.originUrls));
-                    await this.parse(content.split('\n').filter(Boolean));
-                }
-
-                if (subType === 'yaml' && content) {
-                    const proxies = content.proxies;
-                    if (proxies.length) {
-                        this.updateExist(Array.from(this.originUrls));
-                        const vps = getYamlProxies(proxies);
-                        await this.parse(vps.filter(Boolean));
+                    if (parser) {
+                        this.setStore(processVps, parser);
                     }
                 }
+
+                if (v.startsWith('https://') || v.startsWith('http://')) {
+                    const subContent = await fetchWithRetry(v, { retries: 3 }).then(r => r.data.text());
+                    const { subType, content } = this.getSubType(subContent);
+
+                    if (subType === 'base64' && content) {
+                        this.updateExist(Array.from(this.originUrls));
+                        await this.parse(content.split('\n').filter(Boolean));
+                    }
+
+                    if (subType === 'yaml' && content) {
+                        const proxies = content.proxies;
+                        if (proxies.length) {
+                            this.updateExist(Array.from(this.originUrls));
+                            const vps = getYamlProxies(proxies);
+                            await this.parse(vps.filter(Boolean));
+                        }
+                    }
+                }
+            } catch {
+                continue;
             }
         }
     }

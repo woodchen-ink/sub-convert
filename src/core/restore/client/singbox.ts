@@ -18,9 +18,12 @@ export class SingboxClient {
     }
 
     private restoreOutbounds(outbounds: SingboxType['outbounds'] = [], vpsMap: VpsMap): SingboxType['outbounds'] {
-        try {
-            const result: SingboxType['outbounds'] = [];
-            for (const outbound of outbounds) {
+        const result: SingboxType['outbounds'] = [];
+        if (!outbounds) {
+            return result;
+        }
+        for (const outbound of outbounds) {
+            try {
                 if (this.isConfuseVps(outbound.tag)) {
                     const [originPs, confusePs] = PsUtil.getPs(outbound.tag);
                     const vps = vpsMap.get(confusePs);
@@ -31,12 +34,12 @@ export class SingboxClient {
                     outbound.outbounds = this.updateOutbouns(outbound.outbounds);
                 }
                 result.push(outbound);
+            } catch (error: any) {
+                console.warn(`Restore outbounds failed: ${error.message || error}, function trace: ${error.stack}`);
+                continue;
             }
-
-            return result;
-        } catch (error: any) {
-            throw new Error(`Restore outbounds failed: ${error.message || error}, function trace: ${error.stack}`);
         }
+        return result;
     }
 
     private updateOutbouns(outbounds: string[] | undefined = []): string[] {
@@ -57,3 +60,4 @@ export class SingboxClient {
         return PsUtil.isConfigType(tag);
     }
 }
+

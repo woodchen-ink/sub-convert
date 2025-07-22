@@ -25,25 +25,25 @@ export class ClashClient {
     }
 
     private restoreProxies(proxies: Array<Record<string, string>> | null, vpsMap: VpsMap): Array<Record<string, string>> {
-        try {
-            if (!proxies) {
-                return [];
-            }
-
-            const result: Array<Record<string, string>> = [];
-            for (const proxy of proxies) {
+        const result: Array<Record<string, string>> = [];
+        if (!proxies) {
+            return result;
+        }
+        for (const proxy of proxies) {
+            try {
                 const [originPs, confusePs] = PsUtil.getPs(proxy.name);
                 if (vpsMap.has(confusePs)) {
                     const vps = vpsMap.get(confusePs);
                     vps?.restoreClash(proxy, originPs);
                     result.push(proxy);
                 }
+            } catch (error: any) {
+                console.warn(`Restore proxies failed: ${error.message || error}, function trace: ${error.stack}`);
+                continue;
             }
-
-            return result;
-        } catch (error: any) {
-            throw new Error(`Restore proxies failed: ${error.message || error}, function trace: ${error.stack}`);
         }
+
+        return result;
     }
 
     private updateProxiesGroups(proxies: string[]): string[] {

@@ -20,3 +20,11 @@ export function getUrlGroup(urls: string[], chunkCount: number = 10): string[] {
     return urlGroup;
 }
 
+export function isJson(text: string): boolean {
+    try {
+        JSON.parse(text);
+        return true;
+    } catch {
+        return false;
+    }
+}

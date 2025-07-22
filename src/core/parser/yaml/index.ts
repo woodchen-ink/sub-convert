@@ -10,31 +10,35 @@ import { vmessConvert } from './protocol/vmess';
 export function getYamlProxies(proxies: ClashType['proxies']): string[] {
     const proxiesList: string[] = [];
     for (const proxy of proxies) {
-        if (proxy.type === 'vmess') {
-            proxiesList.push(vmessConvert(proxy));
-        }
+        try {
+            if (proxy.type === 'vmess') {
+                proxiesList.push(vmessConvert(proxy));
+            }
 
-        if (proxy.type === 'trojan') {
-            proxiesList.push(trojanConvert(proxy));
-        }
+            if (proxy.type === 'trojan') {
+                proxiesList.push(trojanConvert(proxy));
+            }
 
-        if (proxy.type === 'vless') {
-            proxiesList.push(vlessConvert(proxy));
-        }
+            if (proxy.type === 'vless') {
+                proxiesList.push(vlessConvert(proxy));
+            }
 
-        if (proxy.type === 'ss') {
-            proxiesList.push(shadowsocksConvert(proxy));
-        }
-        if (proxy.type === 'ssr') {
-            proxiesList.push(shadowsocksRConvert(proxy));
-        }
+            if (proxy.type === 'ss') {
+                proxiesList.push(shadowsocksConvert(proxy));
+            }
+            if (proxy.type === 'ssr') {
+                proxiesList.push(shadowsocksRConvert(proxy));
+            }
 
-        if (proxy.type === 'hysteria2' || proxy.type === 'hy2') {
-            proxiesList.push(hysteria2Convert(proxy));
-        }
+            if (proxy.type === 'hysteria2' || proxy.type === 'hy2') {
+                proxiesList.push(hysteria2Convert(proxy));
+            }
 
-        if (proxy.type === 'hysteria') {
-            proxiesList.push(hysteriaConvert(proxy));
+            if (proxy.type === 'hysteria') {
+                proxiesList.push(hysteriaConvert(proxy));
+            }
+        } catch {
+            continue;
         }
     }
 

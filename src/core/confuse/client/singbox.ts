@@ -1,14 +1,14 @@
 import type { SingboxOutboundType, SingboxType } from '../../../types';
 import { fetchWithRetry } from 'cloudflare-tools';
+import { isJson } from '../../../shared/index';
 import { PsUtil } from '../../../shared/ps';
 
 export class SingboxClient {
     public async getConfig(urls: string[]): Promise<SingboxType> {
         try {
-            const result = await Promise.all(
-                urls.map(url => fetchWithRetry(url, { retries: 3 }).then(r => r.data.json())) as SingboxType[]
-            );
-            return this.mergeConfig(result);
+            const result = await Promise.all(urls.map(url => fetchWithRetry(url, { retries: 3 }).then(r => r.data.text())));
+            const configs = result.filter(it => isJson(it)).map(it => JSON.parse(it)) as SingboxType[];
+            return this.mergeConfig(configs);
         } catch (error: any) {
             throw new Error(`Failed to get singbox config: ${error.message || error}`);
         }
