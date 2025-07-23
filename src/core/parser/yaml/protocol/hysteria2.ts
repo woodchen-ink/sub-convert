@@ -39,6 +39,10 @@ export function hysteria2Convert(config: Record<string, any>): string {
         parameters.append('obfs-param', config['obfs-param']);
     }
 
+    if (config['obfs-password']) {
+        parameters.append('obfs-password', config['obfs-password']);
+    }
+
     const queryString = parameters.toString();
 
     const encodedServer = encodeURIComponent(server);

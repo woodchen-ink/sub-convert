@@ -1,4 +1,5 @@
 import type { Hysteria2Config } from '../types';
+import { hasKey } from '../../../shared';
 import { Faker } from '../../../shared/faker';
 import { PsUtil } from '../../../shared/ps';
 
@@ -69,18 +70,29 @@ export class Hysteria2Parser extends Faker {
         proxy.name = ps;
         proxy.server = this.originConfig.hostname ?? '';
         proxy.port = Number(this.originConfig.port ?? 0);
-        proxy.password = this.originConfig?.username ?? '';
-        if (proxy.down) {
-            proxy.down = decodeURIComponent(proxy.down as string);
+        if (proxy.type === 'hysteria2' && hasKey(proxy, 'password')) {
+            proxy.password = this.originConfig?.searchParams?.get('password') ?? '';
         }
-        if (proxy.up) {
-            proxy.up = decodeURIComponent(proxy.up as string);
+
+        if (hasKey(proxy, 'down')) {
+            proxy.down = this.originConfig.searchParams?.get('down') ?? 0;
         }
+        if (hasKey(proxy, 'up')) {
+            proxy.up = this.originConfig.searchParams?.get('up') ?? 0;
+        }
+        if (hasKey(proxy, 'delay')) {
+            proxy.delay = this.originConfig.searchParams?.get('delay') ?? 0;
+        }
+
+        if (this.originConfig.searchParams?.has('sni')) {
+            proxy.sni = this.originConfig.searchParams?.get('sni') ?? '';
+        }
+
         return proxy;
     }
 
     public restoreSingbox(outbound: Record<string, string | number>, ps: string): Record<string, string | number> {
-        outbound.password = this.originConfig?.username ?? '';
+        outbound.password = this.originConfig?.searchParams?.get('password') ?? '';
         outbound.server = this.originConfig.hostname ?? '';
         outbound.server_port = Number(this.originConfig.port ?? 0);
         outbound.tag = ps;

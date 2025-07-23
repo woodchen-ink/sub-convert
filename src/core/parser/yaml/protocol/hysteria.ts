@@ -1,4 +1,5 @@
 import { base64Encode } from 'cloudflare-tools';
+import { hasKey } from '../../../../shared';
 
 /**
  * 将 Hysteria 配置对象转换为 Hysteria 标准协议 URL
@@ -45,6 +46,22 @@ export function hysteriaConvert(config: Record<string, any>): string {
     }
     if (config['obfs-param']) {
         parameters.append('obfs-param', config['obfs-param']);
+    }
+
+    if (hasKey(config, 'up')) {
+        parameters.append('up', config.up);
+    }
+
+    if (hasKey(config, 'down')) {
+        parameters.append('down', config.down);
+    }
+
+    if (hasKey(config, 'delay')) {
+        parameters.append('delay', config.delay);
+    }
+
+    if (hasKey(config, 'sni')) {
+        parameters.append('sni', config.sni);
     }
 
     const queryString = parameters.toString();
