@@ -1,5 +1,6 @@
 import type { Hysteria2Parser } from './protocol/hysteria2';
 import type { SsParser } from './protocol/ss';
+import type { SsrParser } from './protocol/ssr';
 import type { TrojanParser } from './protocol/trojan';
 import type { VlessParser } from './protocol/vless';
 import type { VmessParser } from './protocol/vmess';
@@ -39,15 +40,25 @@ export interface VmessConfig {
     [key: string]: any;
 }
 
+export interface SsrConfig {
+    server: string;
+    port: string;
+    protocol: string;
+    method: string;
+    obfs: string;
+    password_base64: string;
+    remarks: string;
+    params: string;
+    [key: string]: any;
+}
+
 export interface VlessConfig extends BaseConfig {}
 
 export interface TrojanConfig extends BaseConfig {}
 
 export interface SsConfig extends BaseConfig {}
 
-export interface SsrConfig extends BaseConfig {}
-
 export interface Hysteria2Config extends BaseConfig {}
 
-export type ParserType = VlessParser | VmessParser | TrojanParser | SsParser | Hysteria2Parser;
+export type ParserType = VlessParser | VmessParser | TrojanParser | SsParser | Hysteria2Parser | SsrParser;
 

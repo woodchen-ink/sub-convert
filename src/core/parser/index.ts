@@ -5,6 +5,7 @@ import { load } from 'js-yaml';
 import { Convert } from '../convert';
 import { Hysteria2Parser } from './protocol/hysteria2';
 import { SsParser } from './protocol/ss';
+import { SsrParser } from './protocol/ssr';
 import { TrojanParser } from './protocol/trojan';
 import { VlessParser } from './protocol/vless';
 import { VmessParser } from './protocol/vmess';
@@ -12,6 +13,7 @@ import { getYamlProxies } from './yaml';
 
 export * from './protocol/hysteria2';
 export * from './protocol/ss';
+export * from './protocol/ssr';
 export * from './protocol/trojan';
 export * from './protocol/vless';
 export * from './protocol/vmess';
@@ -34,7 +36,6 @@ export class Parser extends Convert {
         for await (const v of vps) {
             try {
                 const processVps = this.updateVpsPs(v);
-
                 if (processVps) {
                     let parser: ParserType | null = null;
 
@@ -46,6 +47,8 @@ export class Parser extends Convert {
                         parser = new TrojanParser(processVps);
                     } else if (processVps.startsWith('ss://') && this.hasProtocol('shadowsocks')) {
                         parser = new SsParser(processVps);
+                    } else if (processVps.startsWith('ssr://') && this.hasProtocol('shadowsocksr')) {
+                        parser = new SsrParser(processVps);
                     } else if (this.isHysteria2(processVps) && this.hasProtocol('hysteria', 'hysteria2', 'hy2')) {
                         parser = new Hysteria2Parser(processVps);
                     }
