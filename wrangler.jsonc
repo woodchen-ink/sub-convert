@@ -3,9 +3,6 @@
     "name": "sub-convert",
     "main": "src/index.ts",
     "compatibility_date": "2023-05-18",
-    "compatibility_flags": ["nodejs_compat"],
-    "observability": {
-        "enabled": true
-    }
+    "compatibility_flags": ["nodejs_compat"]
 }
 

@@ -1,28 +1,29 @@
 import { SubButton, SubCheckbox, SubForm, SubFormItem, SubInput, SubMessage, SubMultiSelect, SubSelect, SubTextarea } from './components';
-import { getAdvancedConfig, getBackendConfig, getProtocolConfig, getRemoteConfig, getShortServeConfig, getTargetConfig } from './config';
-import { getDefaultBackend } from './config/backendConfig';
+import { getAdvancedConfig, getProtocolConfig, getTargetConfig } from './config';
 import { theme } from './script/theme';
 import { layout } from './style/layout';
 import { style } from './style/style';
 
 export function showPage(request: Request, env: Env): Response {
-    const remoteConfig = getRemoteConfig(env);
-    const backendConfig = getBackendConfig(request, env);
-    const shortServeConfig = getShortServeConfig(request, env);
     const targetConfig = getTargetConfig();
     const advancedConfig = getAdvancedConfig();
     const protocolConfig = getProtocolConfig();
-    const defaultBackend = getDefaultBackend(request, env);
-
-    const hasDBConfig = env.DB !== undefined;
 
     const html = `  
     <!DOCTYPE html>
-        <html lang="en" theme="dark">
+        <html lang="zh-CN" theme="dark">
             <head>
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Sub Converter</title>
+                <title>订阅转换器 - 专业的代理订阅格式转换工具</title>
+                <meta name="description" content="专业的代理订阅格式转换工具，支持Clash、sing-box、v2ray等多种格式，支持Base64、YAML、JSON等编码格式，快速转换您的订阅链接。" />
+                <meta name="keywords" content="订阅转换,代理订阅,Clash配置,sing-box,v2ray,订阅格式转换" />
+                <meta name="author" content="Sub Converter" />
+                <meta property="og:title" content="订阅转换器 - 专业的代理订阅格式转换工具" />
+                <meta property="og:description" content="专业的代理订阅格式转换工具，支持多种格式和编码" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="${new URL(request.url).origin}" />
+                <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
 
                 ${style()}
                 ${layout()}
@@ -63,37 +64,74 @@ export function showPage(request: Request, env: Env): Response {
                         margin-top: 24px;
                         padding-right: 100px;
                     }
+
+                    .header {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border-radius: 0 0 20px 20px;
+                        margin-bottom: 30px;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                    }
+
+                    .header__title {
+                        font-size: 28px;
+                        font-weight: 700;
+                        background: linear-gradient(45deg, #fff, #f0f0f0);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    }
+
+                    .main-content {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 0 20px;
+                    }
+
+                    .form-container {
+                        background: var(--background);
+                        border-radius: 16px;
+                        padding: 30px;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+                        border: 1px solid var(--border-color);
+                    }
+
+                    .form-title {
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: 600;
+                        margin-bottom: 30px;
+                        color: var(--text-primary);
+                    }
+
+                    .form-description {
+                        text-align: center;
+                        color: var(--text-secondary);
+                        margin-bottom: 30px;
+                        line-height: 1.6;
+                    }
                 </style>
             </head>
             <body>
                 ${theme()}
 
-                <main>
-                    <header>
-                        <span class="header__icon">
-                            <svg
-                                t="1735896323200"
-                                class="icon"
-                                viewBox="0 0 1024 1024"
-                                version="1.1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                p-id="1626"
-                            >
-                                <path
-                                    d="M512 42.666667A464.64 464.64 0 0 0 42.666667 502.186667 460.373333 460.373333 0 0 0 363.52 938.666667c23.466667 4.266667 32-9.813333 32-22.186667v-78.08c-130.56 27.733333-158.293333-61.44-158.293333-61.44a122.026667 122.026667 0 0 0-52.053334-67.413333c-42.666667-28.16 3.413333-27.733333 3.413334-27.733334a98.56 98.56 0 0 1 71.68 47.36 101.12 101.12 0 0 0 136.533333 37.973334 99.413333 99.413333 0 0 1 29.866667-61.44c-104.106667-11.52-213.333333-50.773333-213.333334-226.986667a177.066667 177.066667 0 0 1 47.36-124.16 161.28 161.28 0 0 1 4.693334-121.173333s39.68-12.373333 128 46.933333a455.68 455.68 0 0 1 234.666666 0c89.6-59.306667 128-46.933333 128-46.933333a161.28 161.28 0 0 1 4.693334 121.173333A177.066667 177.066667 0 0 1 810.666667 477.866667c0 176.64-110.08 215.466667-213.333334 226.986666a106.666667 106.666667 0 0 1 32 85.333334v125.866666c0 14.933333 8.533333 26.88 32 22.186667A460.8 460.8 0 0 0 981.333333 502.186667 464.64 464.64 0 0 0 512 42.666667"
-                                    fill="#231F20"
-                                    p-id="1627"
-                                ></path>
-                            </svg>
-                        </span>
-
-                        <span class="header__title">订阅转换</span>
-
-                        <button class="header__theme"></button>
+                <main class="main-content">
+                    <header class="header">
+                        <div style="text-align: center; padding: 40px 20px;">
+                            <h1 class="header__title">🔗 订阅转换器</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">
+                                专业的代理订阅格式转换工具
+                            </p>
+                        </div>
                     </header>
 
-                    <section>
-                        <sub-form id="sub-convert-form" label-width="100px">
+                    <section class="form-container">
+                        <div class="form-title">订阅格式转换</div>
+                        <div class="form-description">
+                            支持多种订阅格式和客户端，快速转换您的代理订阅链接
+                        </div>
+                        
+                        <sub-form id="sub-convert-form" label-width="120px">
                             <sub-form-item label="订阅链接">
                                 <sub-textarea
                                     key="url"
@@ -102,31 +140,19 @@ export function showPage(request: Request, env: Env): Response {
                                 ></sub-textarea>
                             </sub-form-item>
 
-                            <sub-form-item label="生成类型">
+                            <sub-form-item label="目标格式">
                                 <sub-select key="target"></sub-select>
                             </sub-form-item>
 
-                            <sub-form-item label="远程配置">
-                                <sub-select key="config" filterable></sub-select>
-                            </sub-form-item>
-
-                            <sub-form-item label="后端地址">
-                                <sub-select key="backend" filterable></sub-select>
-                            </sub-form-item>
-
                             <sub-form-item label="包含节点">
-                                <sub-multi-select key="protocol"></sub-multi-select>
+                                <sub-multi-select key="protocol" span="3"></sub-multi-select>
                             </sub-form-item>
 
                             <sub-form-item label="高级选项">
                                 <sub-checkbox key="advanced" span="5"></sub-checkbox>
                             </sub-form-item>
 
-                            <sub-form-item label="短链地址">
-                                <sub-select key="shortServe" filterable placeholder="${!hasDBConfig ? '未配置数据库' : ''}"></sub-select>
-                            </sub-form-item>
-
-                            <sub-form-item label="定制订阅">
+                            <sub-form-item label="转换结果">
                                 <div class="input-group">
                                     <input type="text" value="" disabled id="form-subscribe" />
                                     <sub-button type="default" onclick="sub.copySubUrl('form-subscribe')">
@@ -140,29 +166,7 @@ export function showPage(request: Request, env: Env): Response {
                                             aria-hidden="true"
                                         >
                                             <path
-                                                d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"
-                                            ></path>
-                                        </svg>
-                                        复制
-                                    </sub-button>
-                                </div>
-                            </sub-form-item>
-
-                            <sub-form-item label="订阅短链">
-                                <div class="input-group">
-                                    <input type="text" value="" disabled id="form-short-url" />
-                                    <sub-button type="default" onclick="sub.copySubUrl('form-short-url')">
-                                        <svg
-                                            viewBox="64 64 896 896"
-                                            focusable="false"
-                                            data-icon="copy"
-                                            width="1em"
-                                            height="1em"
-                                            fill="currentColor"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"
+                                                d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.293333-61.44a122.026667 122.026667 0 0 0-52.053334-67.413333c-42.666667-28.16 3.413333-27.733333 3.413334-27.733334a98.56 98.56 0 0 1 71.68 47.36 101.12 101.12 0 0 0 136.533333 37.973334 99.413333 99.413333 0 0 1 29.866667-61.44c-104.106667-11.52-213.333333-50.773333-213.333334-226.986667a177.066667 177.066667 0 0 1 47.36-124.16 161.28 161.28 0 0 1 4.693334-121.173333s39.68-12.373333 128 46.933333a455.68 455.68 0 0 1 234.666666 0c89.6-59.306667 128-46.933333 128-46.933333a161.28 161.28 0 0 1 4.693334 121.173333A177.066667 177.066667 0 0 1 810.666667 477.866667c0 176.64-110.08 215.466667-213.333334 226.986666a106.666667 106.666667 0 0 1 32 85.333334v125.866666c0 14.933333 8.533333 26.88 32 22.186667A460.8 460.8 0 0 0 981.333333 502.186667 464.64 464.64 0 0 0 512 42.666667"
                                             ></path>
                                         </svg>
                                         复制
@@ -173,7 +177,6 @@ export function showPage(request: Request, env: Env): Response {
                             <sub-form-item>
                                 <div class="sub-form-item__actions">
                                     <sub-button disabled id="generate-sub-btn" type="default">生成订阅链接</sub-button>
-                                    <sub-button disabled id="generate-short-url-btn" type="default">生成短链</sub-button>
                                 </div>
                             </sub-form-item>
                         </sub-form>
@@ -196,14 +199,6 @@ export function showPage(request: Request, env: Env): Response {
                             type: 'sub-select',
                             options: ${JSON.stringify(targetConfig)}
                         },
-                        config: {
-                            type: 'sub-select',
-                            options: ${JSON.stringify(remoteConfig)}
-                        },
-                        backend: {
-                            type: 'sub-select',
-                            options: ${JSON.stringify(backendConfig)}
-                        },
                         protocol: {
                             type: 'sub-multi-select',
                             options: ${JSON.stringify(protocolConfig)}
@@ -211,31 +206,21 @@ export function showPage(request: Request, env: Env): Response {
                         advanced: {
                             type: 'sub-checkbox',
                             options: ${JSON.stringify(advancedConfig)}
-                        },
-                        shortServe: {
-                            type: 'sub-select',
-                            options: ${JSON.stringify(shortServeConfig)}
                         }
                     };
 
                     class Sub {
                         #model = {
                             target: '${targetConfig[0].value}',
-                            config: '${remoteConfig[0].value}',
-                            backend: '${defaultBackend}',
                             protocol: '${JSON.stringify(protocolConfig.map(item => item.value))}',
                             advanced: ['emoji', 'new_name'],
-                            shortServe: '${shortServeConfig[0]?.value ?? ''}',
 
-                            subUrl: '',
-                            shortUrl: ''
+                            subUrl: ''
                         };
 
                         #formSubscribe = this.#$('#form-subscribe');
-                        #formShortUrl = this.#$('#form-short-url');
 
                         #generateSubBtn = this.#$('#generate-sub-btn');
-                        #generateShortUrlBtn = this.#$('#generate-short-url-btn');
 
                         #form = this.#$('#sub-convert-form');
                         #formItems = this.#form.querySelectorAll('sub-form-item');
@@ -255,10 +240,6 @@ export function showPage(request: Request, env: Env): Response {
                                     const type = formConfig[formItemKey]?.type;
                                     if (type && ['sub-select', 'sub-checkbox', 'sub-multi-select'].includes(type)) {
                                         formItem.setAttribute('options', JSON.stringify(formConfig[formItemKey].options));
-                                    }
-
-                                    if(formItemKey === 'shortServe' && ${!hasDBConfig}) {
-                                        formItem.setAttribute('disabled', 'true');
                                     }
 
                                     if (formConfig[formItemKey]?.disabled) {
@@ -289,14 +270,10 @@ export function showPage(request: Request, env: Env): Response {
                             });
 
                             this.#generateSubBtn.addEventListener('click', () => {
-                                const url = new URL(this.#model.backend + '/sub');
+                                const url = new URL(window.location.origin + '/sub');
                                 url.searchParams.set('target', this.#model.target);
                                 url.searchParams.set('url', this.#model.url);
                                 url.searchParams.set('insert', 'false');
-                                url.searchParams.set('config', this.#model.config);
-                                url.searchParams.set('list', false);
-                                url.searchParams.set('scv', false);
-                                url.searchParams.set('fdn', false);
                                 url.searchParams.set('protocol', Array.isArray(this.#model.protocol) ? JSON.stringify(this.#model.protocol) : this.#model.protocol);
                                 
                                 const advancedOptions = this.#getAdvancedOptions(this.#model);
@@ -308,41 +285,6 @@ export function showPage(request: Request, env: Env): Response {
                                 const subUrl = url.toString();
                                 this.#formSubscribe.value = subUrl;
                                 this.#model.subUrl = subUrl;
-
-                                this.#generateShortUrlBtn.removeAttribute('disabled');
-                            });
-
-
-
-                            this.#generateShortUrlBtn.addEventListener('click', async () => {
-                                if (!this.#model.shortServe) {
-                                    notification.error('短链服务不存在');
-                                    return;
-                                }
-
-                                // 构建请求数据
-                                const requestData = {
-                                    serve: this.#model.shortServe,
-                                    long_url: this.#model.subUrl
-                                };
-
-                                // 发送请求
-                                const response = await fetch(\`\${this.#model.shortServe}/api/add\`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(requestData)
-                                });
-
-                                if (response.ok) {
-                                    const data = await response.json();
-                                    this.#formShortUrl.value = data.data.short_url;
-                                    this.#model.shortUrl = data.data.short_url;
-                                    notification.success('生成短链接成功');
-                                } else {
-                                    notification.error('生成短链接失败');
-                                }
                             });
                         }
 
@@ -365,7 +307,7 @@ export function showPage(request: Request, env: Env): Response {
                         }
 
                         async copySubUrl(dom) {
-                            const text = this.#$(\`#\${dom}\`).value;
+                            const text = this.#$(`#${dom}`).value;
                             if (!text) {
                                 notification.error('复制内容不能为空');
                                 return;
