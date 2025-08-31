@@ -1,8 +1,4 @@
-import { SubButton, SubCheckbox, SubForm, SubFormItem, SubInput, SubMessage, SubMultiSelect, SubSelect, SubTextarea } from './components';
 import { getAdvancedConfig, getProtocolConfig, getTargetConfig } from './config';
-import { theme } from './script/theme';
-import { layout } from './style/layout';
-import { style } from './style/style';
 
 export function showPage(request: Request, env: Env): Response {
     const targetConfig = getTargetConfig();
@@ -11,7 +7,7 @@ export function showPage(request: Request, env: Env): Response {
 
     const html = `  
     <!DOCTYPE html>
-        <html lang="zh-CN" theme="dark">
+        <html lang="zh-CN" theme="light">
             <head>
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,308 +21,410 @@ export function showPage(request: Request, env: Env): Response {
                 <meta property="og:url" content="${new URL(request.url).origin}" />
                 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
 
-                ${style()}
-                ${layout()}
-
                 <style>
-                    .input-group {
+                    :root {
+                        --primary-bg: #F8F7F6;
+                        --accent-color: #C08259;
+                        --accent-hover: #B0734A;
+                        --text-primary: #1D1D1F;
+                        --text-secondary: #86868B;
+                        --text-tertiary: #A1A1A6;
+                        --border-color: #E5E5E7;
+                        --border-hover: #D2D2D7;
+                        --background: #FFFFFF;
+                        --background-secondary: #F5F5F7;
+                        --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                        --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.08);
+                        --radius: 12px;
+                        --radius-large: 20px;
+                        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+
+                    body {
+                        background: var(--primary-bg);
+                        color: var(--text-primary);
+                        font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans SC', system-ui, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        line-height: 1.5;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    .container {
+                        max-width: 900px;
+                        margin: 0 auto;
+                        padding: 24px;
+                    }
+
+                    .main-content {
+                        background: var(--background);
+                        border-radius: var(--radius-large);
+                        padding: 40px;
+                        box-shadow: var(--shadow);
+                        border: 1px solid var(--border-color);
+                        margin-bottom: 48px;
+                    }
+
+                    .section-title {
+                        font-size: 36px;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        margin: 0 0 8px 0;
+                        text-align: center;
+                    }
+
+                    .section-description {
+                        font-size: 16px;
+                        color: var(--text-secondary);
+                        text-align: center;
+                        margin: 0 0 40px 0;
+                        line-height: 1.6;
+                    }
+
+                    .form-grid {
+                        display: grid;
+                        gap: 32px;
+                    }
+
+                    .form-item {
                         display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                    }
+
+                    .form-label {
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: var(--text-primary);
+                    }
+
+                    .form-input {
+                        padding: 16px;
+                        border: 1px solid var(--border-color);
+                        border-radius: var(--radius);
+                        font-size: 16px;
+                        background: var(--background);
+                        color: var(--text-primary);
+                        transition: var(--transition);
+                        font-family: inherit;
+                    }
+
+                    .form-input:focus {
+                        outline: none;
+                        border-color: var(--accent-color);
+                        box-shadow: 0 0 0 3px rgba(192, 130, 89, 0.1);
+                    }
+
+                    .form-input::placeholder {
+                        color: var(--text-tertiary);
+                    }
+
+                    .form-select {
+                        padding: 16px;
+                        border: 1px solid var(--border-color);
+                        border-radius: var(--radius);
+                        font-size: 16px;
+                        background: var(--background);
+                        color: var(--text-primary);
+                        transition: var(--transition);
+                        font-family: inherit;
+                        cursor: pointer;
+                    }
+
+                    .form-select:focus {
+                        outline: none;
+                        border-color: var(--accent-color);
+                        box-shadow: 0 0 0 3px rgba(192, 130, 89, 0.1);
+                    }
+
+                    .form-checkbox {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 12px 0;
+                    }
+
+                    .form-checkbox input[type="checkbox"] {
+                        width: 20px;
+                        height: 20px;
+                        accent-color: var(--accent-color);
+                        cursor: pointer;
+                    }
+
+                    .form-checkbox label {
+                        font-size: 16px;
+                        color: var(--text-primary);
+                        cursor: pointer;
+                    }
+
+                    .result-section {
+                        background: var(--background-secondary);
+                        border-radius: var(--radius);
+                        padding: 24px;
+                        border: 1px solid var(--border-color);
+                    }
+
+                    .result-input {
+                        width: 100%;
+                        padding: 16px;
+                        border: 1px solid var(--border-color);
+                        border-radius: var(--radius);
+                        font-size: 16px;
+                        background: var(--background);
+                        color: var(--text-primary);
+                        font-family: inherit;
+                        box-sizing: border-box;
+                    }
+
+                    .button-group {
+                        display: flex;
+                        gap: 16px;
+                        justify-content: center;
+                        margin-top: 32px;
+                    }
+
+                    .btn {
+                        padding: 16px 32px;
+                        border: none;
+                        border-radius: var(--radius);
+                        font-size: 16px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: var(--transition);
+                        font-family: inherit;
+                        text-decoration: none;
+                        display: inline-flex;
                         align-items: center;
                         gap: 8px;
                     }
 
-                    .input-group input {
-                        width: 100%;
-                        padding: 4px 11px;
-                        border: 1px solid var(--border-color);
-                        border-radius: var(--radius);
-                        transition: var(--transition);
-                        min-height: 32px;
-                        box-sizing: border-box;
-                        flex: 1;
-                        background-color: var(--background);
-                        color: var(--text-disabled);
+                    .btn-primary {
+                        background: var(--accent-color);
+                        color: white;
+                    }
+
+                    .btn-primary:hover {
+                        background: var(--accent-hover);
+                        transform: translateY(-1px);
+                        box-shadow: var(--shadow-hover);
+                    }
+
+                    .btn-primary:disabled {
+                        background: var(--text-tertiary);
                         cursor: not-allowed;
+                        transform: none;
+                        box-shadow: none;
                     }
 
-                    .input-group input:disabled {
-                        border-color: var(--border-color);
-                        background-color: var(--background-disabled);
-                        color: var(--text-disabled);
-                        opacity: 1;
-                    }
-
-                    .sub-form-item__actions {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        gap: 20px;
-                        margin-top: 24px;
-                        padding-right: 100px;
-                    }
-
-                    .header {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        border-radius: 0 0 20px 20px;
-                        margin-bottom: 30px;
-                        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                    }
-
-                    .header__title {
-                        font-size: 28px;
-                        font-weight: 700;
-                        background: linear-gradient(45deg, #fff, #f0f0f0);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        background-clip: text;
-                        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    }
-
-                    .main-content {
-                        max-width: 800px;
-                        margin: 0 auto;
-                        padding: 0 20px;
-                    }
-
-                    .form-container {
+                    .btn-secondary {
                         background: var(--background);
-                        border-radius: 16px;
-                        padding: 30px;
-                        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-                        border: 1px solid var(--border-color);
+                        color: var(--accent-color);
+                        border: 1px solid var(--accent-color);
                     }
 
-                    .form-title {
-                        text-align: center;
-                        font-size: 24px;
-                        font-weight: 600;
-                        margin-bottom: 30px;
-                        color: var(--text-primary);
+                    .btn-secondary:hover {
+                        background: var(--accent-color);
+                        color: white;
+                        transform: translateY(-1px);
+                        box-shadow: var(--shadow-hover);
                     }
 
-                    .form-description {
-                        text-align: center;
-                        color: var(--text-secondary);
-                        margin-bottom: 30px;
-                        line-height: 1.6;
+                    .copy-icon {
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    .protocol-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 16px;
+                    }
+
+                    .advanced-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                        gap: 16px;
+                    }
+
+                    @media (max-width: 768px) {
+                        .container {
+                            padding: 16px;
+                        }
+                        
+                        .main-content {
+                            padding: 32px 24px;
+                        }
+                        
+                        .section-title {
+                            font-size: 28px;
+                        }
+                        
+                        .section-description {
+                            font-size: 14px;
+                        }
+                        
+                        .button-group {
+                            flex-direction: column;
+                        }
+                        
+                        .btn {
+                            width: 100%;
+                            justify-content: center;
+                        }
                     }
                 </style>
             </head>
             <body>
-                ${theme()}
-
-                <main class="main-content">
-                    <header class="header">
-                        <div style="text-align: center; padding: 40px 20px;">
-                            <h1 class="header__title">🔗 订阅转换器</h1>
-                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">
-                                专业的代理订阅格式转换工具
-                            </p>
-                        </div>
-                    </header>
-
-                    <section class="form-container">
-                        <div class="form-title">订阅格式转换</div>
-                        <div class="form-description">
-                            支持多种订阅格式和客户端，快速转换您的代理订阅链接
-                        </div>
+                <div class="container">
+                    <main class="main-content">
+                        <h1 class="section-title">🔗 订阅转换器</h1>
+                        <p class="section-description">
+                            专业的代理订阅格式转换工具，支持多种订阅格式和客户端，快速转换您的代理订阅链接
+                        </p>
                         
-                        <sub-form id="sub-convert-form" label-width="120px">
-                            <sub-form-item label="订阅链接">
-                                <sub-textarea
-                                    key="url"
+                        <form id="sub-convert-form" class="form-grid">
+                            <div class="form-item">
+                                <label class="form-label">订阅链接</label>
+                                <textarea 
+                                    class="form-input" 
+                                    id="url-input"
                                     placeholder="支持yml/yaml订阅格式，base64订阅格式链接或单节点链接，多个链接每行一个或用 | 分隔"
                                     rows="4"
-                                ></sub-textarea>
-                            </sub-form-item>
+                                ></textarea>
+                            </div>
 
-                            <sub-form-item label="目标格式">
-                                <sub-select key="target"></sub-select>
-                            </sub-form-item>
+                            <div class="form-item">
+                                <label class="form-label">目标格式</label>
+                                <select class="form-select" id="target-select">
+                                    ${targetConfig.map(item => `<option value="${item.value}">${item.label}</option>`).join('')}
+                                </select>
+                            </div>
 
-                            <sub-form-item label="包含节点">
-                                <sub-multi-select key="protocol" span="3"></sub-multi-select>
-                            </sub-form-item>
-
-                            <sub-form-item label="高级选项">
-                                <sub-checkbox key="advanced" span="5"></sub-checkbox>
-                            </sub-form-item>
-
-                            <sub-form-item label="转换结果">
-                                <div class="input-group">
-                                    <input type="text" value="" disabled id="form-subscribe" />
-                                    <sub-button type="default" onclick="sub.copySubUrl('form-subscribe')">
-                                        <svg
-                                            viewBox="64 64 896 896"
-                                            focusable="false"
-                                            data-icon="copy"
-                                            width="1em"
-                                            height="1em"
-                                            fill="currentColor"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.293333-61.44a122.026667 122.026667 0 0 0-52.053334-67.413333c-42.666667-28.16 3.413333-27.733333 3.413334-27.733334a98.56 98.56 0 0 1 71.68 47.36 101.12 101.12 0 0 0 136.533333 37.973334 99.413333 99.413333 0 0 1 29.866667-61.44c-104.106667-11.52-213.333333-50.773333-213.333334-226.986667a177.066667 177.066667 0 0 1 47.36-124.16 161.28 161.28 0 0 1 4.693334-121.173333s39.68-12.373333 128 46.933333a455.68 455.68 0 0 1 234.666666 0c89.6-59.306667 128-46.933333 128-46.933333a161.28 161.28 0 0 1 4.693334 121.173333A177.066667 177.066667 0 0 1 810.666667 477.866667c0 176.64-110.08 215.466667-213.333334 226.986666a106.666667 106.666667 0 0 1 32 85.333334v125.866666c0 14.933333 8.533333 26.88 32 22.186667A460.8 460.8 0 0 0 981.333333 502.186667 464.64 464.64 0 0 0 512 42.666667"
-                                            ></path>
-                                        </svg>
-                                        复制
-                                    </sub-button>
+                            <div class="form-item">
+                                <label class="form-label">包含节点</label>
+                                <div class="protocol-grid">
+                                    ${protocolConfig.map(item => `
+                                        <div class="form-checkbox">
+                                            <input type="checkbox" id="protocol-${item.value}" value="${item.value}" checked>
+                                            <label for="protocol-${item.value}">${item.label}</label>
+                                        </div>
+                                    `).join('')}
                                 </div>
-                            </sub-form-item>
+                            </div>
 
-                            <sub-form-item>
-                                <div class="sub-form-item__actions">
-                                    <sub-button disabled id="generate-sub-btn" type="default">生成订阅链接</sub-button>
+                            <div class="form-item">
+                                <label class="form-label">高级选项</label>
+                                <div class="advanced-grid">
+                                    ${advancedConfig.map(item => `
+                                        <div class="form-checkbox">
+                                            <input type="checkbox" id="advanced-${item.value}" value="${item.value}">
+                                            <label for="advanced-${item.value}">${item.label}</label>
+                                        </div>
+                                    `).join('')}
                                 </div>
-                            </sub-form-item>
-                        </sub-form>
-                    </section>
-                </main>
+                            </div>
 
-                ${SubInput()}
-                ${SubTextarea()}
-                ${SubSelect()}
-                ${SubMultiSelect()}
-                ${SubCheckbox()}
-                ${SubFormItem()}
-                ${SubForm()}
-                ${SubButton()}
-                ${SubMessage()}
+                            <div class="form-item">
+                                <label class="form-label">转换结果</label>
+                                <div class="result-section">
+                                    <input type="text" class="result-input" id="result-input" readonly placeholder="点击生成按钮获取转换结果">
+                                </div>
+                            </div>
+
+                            <div class="button-group">
+                                <button type="button" class="btn btn-primary" id="generate-btn" disabled>
+                                    <span>生成订阅链接</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="copy-btn" disabled>
+                                    <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                    </svg>
+                                    <span>复制结果</span>
+                                </button>
+                            </div>
+                        </form>
+                    </main>
+                </div>
 
                 <script>
-                    const formConfig = {
-                        target: {
-                            type: 'sub-select',
-                            options: ${JSON.stringify(targetConfig)}
-                        },
-                        protocol: {
-                            type: 'sub-multi-select',
-                            options: ${JSON.stringify(protocolConfig)}
-                        },
-                        advanced: {
-                            type: 'sub-checkbox',
-                            options: ${JSON.stringify(advancedConfig)}
-                        }
-                    };
-
-                    class Sub {
-                        #model = {
-                            target: '${targetConfig[0].value}',
-                            protocol: '${JSON.stringify(protocolConfig.map(item => item.value))}',
-                            advanced: ['emoji', 'new_name'],
-
-                            subUrl: ''
-                        };
-
-                        #formSubscribe = this.$('#form-subscribe');
-
-                        #generateSubBtn = this.$('#generate-sub-btn');
-
-                        #form = this.$('#sub-convert-form');
-                        #formItems = this.#form.querySelectorAll('sub-form-item');
-
-                        #headerIcon = this.$('.header__icon');
-
+                    class SubConverter {
                         constructor() {
-                            this.#init();
-                            this.#bindEvents();
+                            this.urlInput = document.getElementById('url-input');
+                            this.targetSelect = document.getElementById('target-select');
+                            this.generateBtn = document.getElementById('generate-btn');
+                            this.copyBtn = document.getElementById('copy-btn');
+                            this.resultInput = document.getElementById('result-input');
+                            
+                            this.init();
                         }
 
-                        #init() {
-                            this.#formItems.forEach(item => {
-                                const formItem = item.querySelector('[key]');
-                                if (formItem) {
-                                    const formItemKey = formItem.getAttribute('key');
-                                    const type = formConfig[formItemKey]?.type;
-                                    if (type && ['sub-select', 'sub-checkbox', 'sub-multi-select'].includes(type)) {
-                                        formItem.setAttribute('options', JSON.stringify(formConfig[formItemKey].options));
-                                    }
-
-                                    if (formConfig[formItemKey]?.disabled) {
-                                        formItem.setAttribute('disabled', '');
-                                    }
-                                }
-                            });
-
-                            this.#form.setAttribute('model', JSON.stringify(this.#model));
+                        init() {
+                            this.bindEvents();
+                            this.updateGenerateButton();
                         }
 
-                        #bindEvents() {
-
-                            this.#headerIcon.addEventListener('click', () => {
-                                window.open('https://github.com/jwyGithub/sub-convert');
-                            });
-
-
-                            this.#form.addEventListener('form:change', e => {
-                                this.#model[e.detail.key] = e.detail.value;
-                                this.#form.setAttribute('model', JSON.stringify(this.#model));
-
-                                if (this.#model.url) {
-                                    this.#generateSubBtn.removeAttribute('disabled');
-                                } else {
-                                    this.#generateSubBtn.setAttribute('disabled', '');
-                                }
-                            });
-
-                            this.#generateSubBtn.addEventListener('click', () => {
-                                const url = new URL(window.location.origin + '/sub');
-                                url.searchParams.set('target', this.#model.target);
-                                url.searchParams.set('url', this.#model.url);
-                                url.searchParams.set('insert', 'false');
-                                url.searchParams.set('protocol', Array.isArray(this.#model.protocol) ? JSON.stringify(this.#model.protocol) : this.#model.protocol);
-                                
-                                const advancedOptions = this.#getAdvancedOptions(this.#model);
-
-                                advancedOptions.forEach(option => {
-                                    url.searchParams.set(option.label, option.value);
-                                });
-
-                                const subUrl = url.toString();
-                                this.#formSubscribe.value = subUrl;
-                                this.#model.subUrl = subUrl;
-                            });
+                        bindEvents() {
+                            this.urlInput.addEventListener('input', () => this.updateGenerateButton());
+                            this.generateBtn.addEventListener('click', () => this.generateSub());
+                            this.copyBtn.addEventListener('click', () => this.copyResult());
                         }
 
-                        #getAdvancedOptions(model) {
-                            return formConfig.advanced.options.map(option => {
-                                return {
-                                    label: option.value,
-                                    value: model.advanced.includes(option.value)
-                                };
-                            });
+                        updateGenerateButton() {
+                            const hasUrl = this.urlInput.value.trim().length > 0;
+                            this.generateBtn.disabled = !hasUrl;
                         }
 
-                        /**
-                         * 获取元素
-                         * @param {string} selector
-                         * @returns {HTMLElement}
-                         */
-                        $(selector) {
-                            return document.querySelector(selector);
+                        getSelectedProtocols() {
+                            const checkboxes = document.querySelectorAll('input[id^="protocol-"]:checked');
+                            return Array.from(checkboxes).map(cb => cb.value);
                         }
 
-                        async copySubUrl(dom) {
-                            const text = this.$('#' + dom).value;
-                            if (!text) {
-                                notification.error('复制内容不能为空');
+                        getSelectedAdvanced() {
+                            const checkboxes = document.querySelectorAll('input[id^="advanced-"]:checked');
+                            return Array.from(checkboxes).map(cb => cb.value);
+                        }
+
+                        async generateSub() {
+                            const url = this.urlInput.value.trim();
+                            const target = this.targetSelect.value;
+                            const protocols = this.getSelectedProtocols();
+                            const advanced = this.getSelectedAdvanced();
+
+                            if (!url) {
+                                this.showNotification('请输入订阅链接', 'error');
                                 return;
                             }
 
-                            const success = await this.copyToClipboard(text);
-                            if (success) {
-                                notification.success('复制成功');
+                            try {
+                                const apiUrl = new URL(window.location.origin + '/sub');
+                                apiUrl.searchParams.set('target', target);
+                                apiUrl.searchParams.set('url', url);
+                                apiUrl.searchParams.set('insert', 'false');
+                                apiUrl.searchParams.set('protocol', JSON.stringify(protocols));
+                                
+                                advanced.forEach(option => {
+                                    apiUrl.searchParams.set(option, 'true');
+                                });
+
+                                this.resultInput.value = apiUrl.toString();
+                                this.copyBtn.disabled = false;
+                                this.showNotification('订阅链接生成成功', 'success');
+                            } catch (error) {
+                                this.showNotification('生成失败: ' + error.message, 'error');
                             }
                         }
 
-                        async copyToClipboard(text) {
+                        async copyResult() {
+                            const text = this.resultInput.value;
+                            if (!text) {
+                                this.showNotification('没有可复制的内容', 'error');
+                                return;
+                            }
+
                             try {
                                 if (navigator.clipboard && window.isSecureContext) {
-                                    // 优先使用 Clipboard API
                                     await navigator.clipboard.writeText(text);
-                                    return true;
+                                    this.showNotification('复制成功', 'success');
                                 } else {
-                                    // 降级使用 document.execCommand
                                     const textArea = document.createElement('textarea');
                                     textArea.value = text;
                                     textArea.style.position = 'fixed';
@@ -339,20 +437,48 @@ export function showPage(request: Request, env: Env): Response {
                                     const success = document.execCommand('copy');
                                     textArea.remove();
 
-                                    if (!success) {
+                                    if (success) {
+                                        this.showNotification('复制成功', 'success');
+                                    } else {
                                         throw new Error('复制失败');
                                     }
-                                    return true;
                                 }
                             } catch (error) {
-                                notification.error('复制失败: ' + (error.message || '未知错误'));
-                                return false;
+                                this.showNotification('复制失败: ' + error.message, 'error');
                             }
+                        }
+
+                        showNotification(message, type = 'info') {
+                            // 简单的通知显示
+                            const notification = document.createElement('div');
+                            
+                            // 根据类型设置背景色
+                            let bgColor = '#007AFF'; // 默认蓝色
+                            if (type === 'success') bgColor = '#34C759';
+                            else if (type === 'error') bgColor = '#FF3B30';
+                            
+                            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 16px 24px; border-radius: var(--radius); color: white; font-weight: 500; z-index: 1000; transform: translateX(100%); transition: transform 0.3s ease; background: ' + bgColor + ';';
+                            notification.textContent = message;
+                            
+                            document.body.appendChild(notification);
+                            
+                            setTimeout(() => {
+                                notification.style.transform = 'translateX(0)';
+                            }, 100);
+                            
+                            setTimeout(() => {
+                                notification.style.transform = 'translateX(100%)';
+                                setTimeout(() => {
+                                    document.body.removeChild(notification);
+                                }, 300);
+                            }, 3000);
                         }
                     }
 
-                    const sub = new Sub();
-
+                    // 初始化应用
+                    document.addEventListener('DOMContentLoaded', () => {
+                        new SubConverter();
+                    });
                 </script>
             </body>
         </html>
