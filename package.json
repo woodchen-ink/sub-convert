@@ -10,6 +10,7 @@
         "pages": "vite build"
     },
     "dependencies": {
+        "cloudflare-tools": "^0.2.2",
         "js-yaml": "^4.1.0"
     },
     "devDependencies": {
@@ -26,4 +27,3 @@
         "wrangler": "^4.13.1"
     }
 }
-

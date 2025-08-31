@@ -218,14 +218,14 @@ export function showPage(request: Request, env: Env): Response {
                             subUrl: ''
                         };
 
-                        #formSubscribe = this.#$('#form-subscribe');
+                        #formSubscribe = this.$('#form-subscribe');
 
-                        #generateSubBtn = this.#$('#generate-sub-btn');
+                        #generateSubBtn = this.$('#generate-sub-btn');
 
-                        #form = this.#$('#sub-convert-form');
+                        #form = this.$('#sub-convert-form');
                         #formItems = this.#form.querySelectorAll('sub-form-item');
 
-                        #headerIcon = this.#$('.header__icon');
+                        #headerIcon = this.$('.header__icon');
 
                         constructor() {
                             this.#init();
@@ -302,12 +302,12 @@ export function showPage(request: Request, env: Env): Response {
                          * @param {string} selector
                          * @returns {HTMLElement}
                          */
-                        #$(selector) {
+                        $(selector) {
                             return document.querySelector(selector);
                         }
 
                         async copySubUrl(dom) {
-                            const text = this.#$(`#${dom}`).value;
+                            const text = this.$('#' + dom).value;
                             if (!text) {
                                 notification.error('复制内容不能为空');
                                 return;
